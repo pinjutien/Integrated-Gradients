@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import PIL.Image
-
-from cStringIO import StringIO
+from io import StringIO
+# from cStringIO import StringIO
 from IPython.display import display
 from IPython.display import Image
 from scipy import ndimage

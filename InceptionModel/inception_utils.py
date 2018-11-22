@@ -1,15 +1,25 @@
 import numpy as np
 import tensorflow as tf
+from tensorflow.python.platform import gfile
 
+# def load_model(model_path):
+#   '''Loads the Inception (v1) model and creates a TensorFlow session for it.'''
+#   graph = tf.Graph()
+#   cfg = tf.ConfigProto(gpu_options={'allow_growth':True})
+#   sess = tf.InteractiveSession(graph=graph, config=cfg)
+#   graph_def = tf.GraphDef.FromString(open(model_path).read())
+#   tf.import_graph_def(graph_def)
+#   return sess, graph
 
 def load_model(model_path):
-  '''Loads the Inception (v1) model and creates a TensorFlow session for it.'''
-  graph = tf.Graph()
-  cfg = tf.ConfigProto(gpu_options={'allow_growth':True})
-  sess = tf.InteractiveSession(graph=graph, config=cfg)
-  graph_def = tf.GraphDef.FromString(open(model_path).read())
-  tf.import_graph_def(graph_def)
-  return sess, graph
+    '''Loads the Inception (v1) model and creates a TensorFlow session for it.'''
+    graph = tf.Graph()
+    cfg = tf.ConfigProto(gpu_options={'allow_growth':True})
+    sess = tf.InteractiveSession(graph=graph, config=cfg)
+    graph_def = tf.GraphDef.FromString(gfile.FastGFile(model_path,'rb').read()) 
+    # graph_def = tf.GraphDef.FromString(open(model_path).read())
+    tf.import_graph_def(graph_def)
+    return sess, graph
 
 
 def load_labels_vocabulary(labels_path):
