@@ -144,50 +144,50 @@ def MorphologicalCleanup(attributions, structure=np.ones((4,4))):
 def Outlines(attributions, percentage=90,
              connected_component_structure=np.ones((3,3)),
              plot_distribution=True):
-  # Binarize the attributions mask if not already.
-  attributions = Binarize(attributions)
+    # Binarize the attributions mask if not already.
+    attributions = Binarize(attributions)
 
-  attributions = ndimage.binary_fill_holes(attributions)
-  
-  # Compute connected components of the transformed mask.
-  connected_components, num_cc = ndimage.measurements.label(
-      attributions, structure=connected_component_structure)
+    attributions = ndimage.binary_fill_holes(attributions)
 
-  # Go through each connected component and sum up the attributions of that
-  # component.
-  overall_sum = np.sum(attributions[connected_components > 0])
-  component_sums = []
-  for cc_idx in range(1, num_cc + 1):
-    cc_mask = connected_components == cc_idx
-    component_sum = np.sum(attributions[cc_mask])
-    component_sums.append((component_sum, cc_mask))
+    # Compute connected components of the transformed mask.
+    connected_components, num_cc = ndimage.measurements.label(
+        attributions, structure=connected_component_structure)
 
-  # Compute the percentage of top components to keep.
-  sorted_sums_and_masks = sorted(
-      component_sums, key=lambda x: x[0], reverse=True)
-  sorted_sums = zip(*sorted_sums_and_masks)[0]
-  cumulative_sorted_sums = np.cumsum(sorted_sums)
-  cutoff_threshold = percentage * overall_sum / 100
-  cutoff_idx = np.where(cumulative_sorted_sums >= cutoff_threshold)[0][0]
+    # Go through each connected component and sum up the attributions of that
+    # component.
+    overall_sum = np.sum(attributions[connected_components > 0])
+    component_sums = []
+    for cc_idx in range(1, num_cc + 1):
+        cc_mask = connected_components == cc_idx
+        component_sum = np.sum(attributions[cc_mask])
+        component_sums.append((component_sum, cc_mask))
 
-  if cutoff_idx > 2:
-    cutoff_idx = 2
-  
-  # Turn on the kept components.
-  border_mask = np.zeros_like(attributions)
-  for i in range(cutoff_idx + 1):
-    border_mask[sorted_sums_and_masks[i][1]] = 1
+    # Compute the percentage of top components to keep.
+    sorted_sums_and_masks = sorted(
+        component_sums, key=lambda x: x[0], reverse=True)
+    sorted_sums = list(zip(*sorted_sums_and_masks))[0]
+    cumulative_sorted_sums = np.cumsum(sorted_sums)
+    cutoff_threshold = percentage * overall_sum / 100
+    cutoff_idx = np.where(cumulative_sorted_sums >= cutoff_threshold)[0][0]
 
-  if plot_distribution:
-    plt.plot(np.arange(len(sorted_sums)), sorted_sums)
-    plt.axvline(x=cutoff_idx)
-    plt.show()
+    if cutoff_idx > 2:
+        cutoff_idx = 2
 
-  # Hollow out the mask so that only the border is showing.
-  eroded_mask = ndimage.binary_erosion(border_mask, iterations=1)
-  border_mask[eroded_mask] = 0
-  
-  return border_mask
+    # Turn on the kept components.
+    border_mask = np.zeros_like(attributions)
+    for i in range(cutoff_idx + 1):
+        border_mask[sorted_sums_and_masks[i][1]] = 1
+
+    if plot_distribution:
+        plt.plot(np.arange(len(sorted_sums)), sorted_sums)
+        plt.axvline(x=cutoff_idx)
+        plt.show()
+
+    # Hollow out the mask so that only the border is showing.
+    eroded_mask = ndimage.binary_erosion(border_mask, iterations=1)
+    border_mask[eroded_mask] = 0
+
+    return border_mask
 
 
 def Overlay(attributions, image):
