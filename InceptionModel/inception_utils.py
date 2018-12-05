@@ -37,7 +37,6 @@ def supplement_graph(graph):
     gradients for the prediction at a particular label (specified by a placeholder)
     with respect to the input.
     """
-    import pdb; pdb.set_trace()
     with graph.as_default():
         label_index = tf.placeholder(tf.int32, [])
         inp = T(graph, 'input')
