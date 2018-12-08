@@ -191,32 +191,32 @@ def Outlines(attributions, percentage=90,
 
 
 def Overlay(attributions, image):
-  return np.clip(0.7 * image + 0.5 * attributions, 0, 255)
+    return np.clip(0.7 * image + 0.5 * attributions, 0, 255)
 
 
 def pil_image(x):
-  """Returns a PIL image created from the provided RGB array.
+    """Returns a PIL image created from the provided RGB array.
 
-  Args:
-    x: (numpy.array) RGB array of shape [height, width, 3] consisting of values
-      in range 0-255.
+    Args:
+      x: (numpy.array) RGB array of shape [height, width, 3] consisting of values
+        in range 0-255.
 
-  Returns:
-    The PIL image.
-  """
-  x = np.uint8(x)
-  return PIL.Image.fromarray(x)
+    Returns:
+      The PIL image.
+    """
+    x = np.uint8(x)
+    return PIL.Image.fromarray(x)
 
 
 def show_pil_image(pil_img):
-  """Display the provided PIL image.
+    """Display the provided PIL image.
 
-  Args:
-    pil_img: (PIL.Image) The provided PIL image.
-  """
-  f = StringIO()
-  pil_img.save(f, 'png')
-  display(Image(data=f.getvalue()))
+    Args:
+      pil_img: (PIL.Image) The provided PIL image.
+    """
+    f = StringIO()
+    pil_img.save(f, 'png')
+    display(Image(data=f.getvalue()))
 
 
 G = [0, 255, 0]

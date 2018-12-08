@@ -80,7 +80,7 @@ def integrated_gradients(
     predictions, grads = predictions_and_gradients(scaled_inputs, target_label_index)  # shapes: <steps+1>, <steps+1, inp.shape>
 
     if (path_type == 1):
-        print("path type: {x}".format(x = path_type))
+        # print("path type: {x}".format(x = path_type))
         grads_temp = [grads[:-1][i-1]*i/steps for i in range(1, steps +1)]
         avg_grads = np.average(grads_temp, axis=0)
         integrated_gradients = (inp-baseline)*avg_grads  # shape: <inp.shape>
